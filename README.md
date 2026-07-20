@@ -81,11 +81,12 @@ Usuario demo tras el seed: `john@doe.com` / `johndoe123`.
 
 ## 🔐 Variables de entorno
 
-| Variable          | Descripción                                                     |
-| ----------------- | --------------------------------------------------------------- |
-| `DATABASE_URL`    | Cadena de conexión PostgreSQL. Ej. Neon con `?sslmode=require`. |
-| `NEXTAUTH_SECRET` | Secreto de sesión. Genera con `openssl rand -base64 32`.        |
-| `NEXTAUTH_URL`    | URL canónica del despliegue. Local: `http://localhost:3000`.    |
+| Variable          | Descripción                                                              |
+| ----------------- | ------------------------------------------------------------------------ |
+| `DATABASE_URL`    | Conexión **pooled** (runtime). Neon: host `-pooler` + `pgbouncer=true`.   |
+| `DIRECT_URL`      | Conexión **directa** (migraciones / `db push`). Neon: host sin `-pooler`. |
+| `NEXTAUTH_SECRET` | Secreto de sesión. Genera con `openssl rand -base64 32`.                  |
+| `NEXTAUTH_URL`    | URL canónica del despliegue. Local: `http://localhost:3000`.             |
 
 > ⚠️ **Nunca** subas el archivo `.env` al repositorio. Ya está en `.gitignore`.
 > Usa `.env.example` como plantilla.
