@@ -1,0 +1,40 @@
+
+{
+  "system": "Eagle International Product Troubleshooting Master",
+  "version": "1.0.0",
+  "author": "Chief Product Engineer",
+  "data": [
+    {
+      "id": "ERR-001",
+      "model": "Titan II",
+      "issue": "Irregular cutting surface / scalloped edges",
+      "technical_cause": "Hydraulic pressure oscillation caused by thermal expansion of the blade assembly exceeding 0.05mm tolerance.",
+      "suggested_solution": "Recalibrate the hydraulic valve manifold and verify cooling system flow rate (min 15 GPM). Inspect blade guides for excessive heat scoring.",
+      "reference": "Titan II Operational Manual - Page 42"
+    },
+    {
+      "id": "ERR-002",
+      "model": "General Series",
+      "issue": "Sudden productivity drop (linear to exponential)",
+      "technical_cause": "Critical wear threshold reached (65%+); leading edge geometry deformation causes secondary friction drag.",
+      "suggested_solution": "Perform immediate blade replacement. Inspect hydraulic filters for metallic particulate residue from over-stressed pins.",
+      "reference": "Productivity & Maintenance Audit Guide - Page 18"
+    },
+    {
+      "id": "ERR-003",
+      "model": "Titan II",
+      "issue": "Excessive vibration during high-speed cycle",
+      "technical_cause": "Blade imbalance due to non-uniform material wear or debris accumulation in the hub flange.",
+      "suggested_solution": "Clean hub assembly and perform static balance check. Torque blade mounting bolts to 450 ft-lbs.",
+      "reference": "Titan II Maintenance Manual - Page 12"
+    },
+    {
+      "id": "ERR-004",
+      "model": "Eagle X-Stream",
+      "issue": "Hydraulic fluid overheating",
+      "technical_cause": "Blunt blade edges forcing pump to bypass relief valve frequently to maintain cutting torque.",
+      "suggested_solution": "Verify blade sharpness. If wear is within limits, check heat exchanger fan relay and clean cooling fins.",
+      "reference": "X-Stream Technical Specifications - Page 55"
+    }
+  ]
+}

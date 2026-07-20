@@ -1,0 +1,358 @@
+generator client {
+    provider      = "prisma-client-js"
+    binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// ============================================
+// EAGLE OTR OPS SUITE - DATABASE SCHEMA
+// ============================================
+
+// -------------------- USER MANAGEMENT --------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          UserRole  @default(OPERATOR)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Legacy relations (spare parts calculator)
+  scenarios     Scenario[]
+  history       CalculationHistory[]
+  
+  // New OTR Ops Suite relations
+  projects      ProjectMember[]
+  simulations   Simulation[]
+  reports       Report[]
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  OPERATOR
+}
+
+// -------------------- PROJECTS/SITES --------------------
+// Each mining site or client location with custom operational rates
+
+model Project {
+  id                  String    @id @default(cuid())
+  name                String
+  location            String?
+  clientName          String?
+  description         String?
+  
+  // Financial rates (local market costs)
+  electricityCostKwH  Float     @default(0.12)    // Cost per kWh (industry default: $0.12)
+  dieselCostGallon    Float     @default(3.50)    // Cost per gallon (industry default: $3.50)
+  laborCostHour       Float     @default(25.00)   // Hourly labor rate (industry default: $25)
+  waterCostGallon     Float     @default(0.005)   // Water cost per gallon
+  
+  // Operating schedule
+  operatingHoursShift Int       @default(8)       // Hours per shift (8, 10, or 12)
+  shiftsPerDay        Int       @default(1)       // Shifts per day (1-3)
+  daysPerYear         Int       @default(250)     // Operating days per year
+  
+  // Financial settings
+  currency            String    @default("USD")   // USD, MXN, AUD, EUR, etc.
+  
+  // Tire specifications for this site
+  avgTireWeightKg     Float     @default(300)
+  tireSizeCategory    String    @default("medium")
+  
+  status              ProjectStatus @default(ACTIVE)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  
+  // Relations
+  members             ProjectMember[]
+  fleet               ProjectMachine[]
+  simulations         Simulation[]
+  reports             Report[]
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  PLANNING
+}
+
+model ProjectMember {
+  id          String    @id @default(cuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        ProjectRole @default(VIEWER)
+  joinedAt    DateTime  @default(now())
+  
+  @@unique([projectId, userId])
+}
+
+enum ProjectRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+// -------------------- MACHINE TEMPLATES --------------------
+// Official Eagle machine specifications (from technical docs)
+
+model MachineTemplate {
+  id                    Int       @id @default(autoincrement())
+  machineCode           String    @unique  // e.g., "OTR_DEBEADER"
+  name                  String              // e.g., "OTR Debeader"
+  fullName              String              // e.g., "Eagle OTR Debeader"
+  function              String              // What the machine does
+  
+  // Cycle time specs (minutes)
+  cycleTimeMin          Float     @default(8)
+  cycleTimeMax          Float     @default(12)
+  cycleTimeTypical      Float     @default(10)
+  
+  // Throughput specs (tires/hour)
+  throughputMin         Float     @default(4)
+  throughputMax         Float     @default(8)
+  throughputTypical     Float     @default(6)
+  
+  // Power consumption
+  powerKw               Float     @default(50)   // kW rating
+  fuelGallonsHour       Float     @default(0)    // For diesel units
+  
+  // Operational costs
+  maintenanceCostHour   Float     @default(5.00)
+  operatorsRequired     Int       @default(1)
+  
+  // Spare parts reference
+  categoryId            Int?
+  category              Category? @relation(fields: [categoryId], references: [id])
+  
+  notes                 String[]
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  // Relations
+  projectMachines       ProjectMachine[]
+  simulationMachines    SimulationMachine[]
+}
+
+// -------------------- FLEET MANAGEMENT --------------------
+// Actual machines deployed at each project site
+
+model ProjectMachine {
+  id                String    @id @default(cuid())
+  projectId         String
+  project           Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  templateId        Int
+  template          MachineTemplate @relation(fields: [templateId], references: [id])
+  
+  quantity          Int       @default(1)
+  serialNumbers     String[]            // Track individual units
+  installDate       DateTime?
+  status            MachineStatus @default(OPERATIONAL)
+  
+  // Overrides for site-specific conditions
+  customThroughput  Float?              // Override if different from template
+  customPowerKw     Float?
+  
+  notes             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+enum MachineStatus {
+  OPERATIONAL
+  MAINTENANCE
+  OFFLINE
+  DECOMMISSIONED
+}
+
+// -------------------- SIMULATIONS --------------------
+// Cost and productivity calculations for comparison
+
+model Simulation {
+  id                  String    @id @default(cuid())
+  name                String
+  description         String?
+  
+  projectId           String
+  project             Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId              String
+  user                User      @relation(fields: [userId], references: [id])
+  
+  // Simulation parameters
+  shiftsPerDay        Int       @default(1)
+  hoursPerShift       Float     @default(8)
+  operatingDays       Int       @default(250)
+  useTypicalRates     Boolean   @default(true)
+  tireSizeCategory    String    @default("medium")
+  tireWeightKg        Float     @default(300)
+  
+  // Results - Production
+  tiresPerHour        Float     @default(0)
+  tiresPerShift       Float     @default(0)
+  tiresPerYear        Float     @default(0)
+  bottleneckMachine   String?
+  efficiencyScore     Int       @default(0)
+  
+  // Results - Weight
+  tonsPerShift        Float     @default(0)
+  tonsPerYear         Float     @default(0)
+  rubberTonsPerYear   Float     @default(0)
+  
+  // Results - Costs
+  laborCostYear       Float     @default(0)
+  energyCostYear      Float     @default(0)
+  maintenanceCostYear Float     @default(0)
+  totalOpexYear       Float     @default(0)
+  costPerTire         Float     @default(0)
+  costPerTon          Float     @default(0)
+  
+  // Results - Revenue potential
+  revenuePerTonRubber Float     @default(150)   // Market rate
+  potentialRevenue    Float     @default(0)
+  estimatedProfit     Float     @default(0)
+  
+  status              SimulationStatus @default(DRAFT)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  
+  // Relations
+  machines            SimulationMachine[]
+  reports             Report[]
+}
+
+enum SimulationStatus {
+  DRAFT
+  CALCULATED
+  APPROVED
+  ARCHIVED
+}
+
+model SimulationMachine {
+  id              String    @id @default(cuid())
+  simulationId    String
+  simulation      Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
+  templateId      Int?
+  template        MachineTemplate? @relation(fields: [templateId], references: [id])
+  
+  // Machine configuration
+  machineCode     String              // e.g., "OTR_DEBEADER"
+  quantity        Int       @default(1)
+  powerType       String    @default("ELECTRIC")  // ELECTRIC or DIESEL
+  
+  // Calculated values for this machine in simulation
+  effectiveThroughput   Float   @default(0)
+  utilizationPercent    Float   @default(0)
+  isBottleneck          Boolean @default(false)
+  
+  // Cost breakdown
+  laborCost       Float     @default(0)
+  energyCost      Float     @default(0)
+  maintenanceCost Float     @default(0)
+}
+
+// -------------------- REPORTS --------------------
+// Generated PDF reports for client presentation
+
+model Report {
+  id              String    @id @default(cuid())
+  name            String
+  type            ReportType
+  
+  projectId       String
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  simulationId    String?
+  simulation      Simulation? @relation(fields: [simulationId], references: [id])
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  
+  // Report content
+  summary         String?
+  sections        Json                // Flexible sections data
+  cloudStoragePath String?            // S3 path for generated PDF
+  isPublic        Boolean   @default(false)
+  
+  status          ReportStatus @default(DRAFT)
+  generatedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum ReportType {
+  PRODUCTION_ANALYSIS
+  COST_BREAKDOWN
+  ROI_PROJECTION
+  FLEET_SUMMARY
+  EXECUTIVE_SUMMARY
+  SPARE_PARTS_QUOTE
+}
+
+enum ReportStatus {
+  DRAFT
+  GENERATING
+  READY
+  SENT
+}
+
+// -------------------- LEGACY MODELS (Spare Parts) --------------------
+
+model Category {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  displayOrder    Int       @default(0)
+  parts           Part[]
+  templates       MachineTemplate[]
+  createdAt       DateTime  @default(now())
+}
+
+model Part {
+  id              Int       @id @default(autoincrement())
+  name            String
+  partType        String
+  defaultQty      Int       @default(1)
+  defaultPrice    Float     @default(0)
+  categoryId      Int
+  category        Category  @relation(fields: [categoryId], references: [id])
+  scenarioItems   ScenarioItem[]
+  createdAt       DateTime  @default(now())
+}
+
+model Scenario {
+  id            String    @id @default(cuid())
+  name          String
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items         ScenarioItem[]
+  grandTotal    Float     @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ScenarioItem {
+  id            String    @id @default(cuid())
+  scenarioId    String
+  scenario      Scenario  @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  partId        Int
+  part          Part      @relation(fields: [partId], references: [id])
+  quantity      Int       @default(0)
+  unitPrice     Float     @default(0)
+  lineTotal     Float     @default(0)
+}
+
+model CalculationHistory {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenarioName  String?
+  grandTotal    Float     @default(0)
+  details       Json
+  calculatedAt  DateTime  @default(now())
+}

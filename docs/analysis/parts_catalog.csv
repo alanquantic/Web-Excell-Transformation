@@ -1,0 +1,15 @@
+Part ID,Equipment Category,Part Name,Part Type,Default Quantity,Default Price (USD),Default Line Total
+1,OTR Debeader,Hydraulic Filter,hydraulic,2,$181.40,$362.80
+2,OTR Debeader,Limit Switch,electronic,2,$505.23,$1010.46
+3,OTR Debeader,Cutter Blade,blade,2,$607.23,$1214.46
+4,OTR Debeader,Guide Roller & Bushing,mechanical,1,$165.49,$165.49
+5,OTR Debeader,Guide Roller Pin,mechanical,1,$88.58,$88.58
+6,Punch Cutter II,Hydraulic Filter,hydraulic,2,$181.40,$362.80
+7,Punch Cutter II,Sensory Rotary Encoder,electronic,1,$735.65,$735.65
+8,Punch Cutter II,Limit Switch,electronic,2,$505.23,$1010.46
+9,Punch Cutter II,Punch Blade,blade,2,$596.53,$1193.06
+10,Titan II,Hydraulic Filter,hydraulic,2,$181.40,$362.80
+11,Titan II,Cutter Blade,blade,2,$2653.00,$5306.00
+12,Titan II,Guide Roller & Bushing,mechanical,1,$831.40,$831.40
+13,Titan II,Guide Roller Pin,mechanical,1,$588.40,$588.40
+14,Interchangeable Parts,PQ Control,electronic,1,$655.90,$655.90

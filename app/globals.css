@@ -1,0 +1,519 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[data-hydration-error] { display: none !important; }
+
+@layer base {
+  :root {
+    /* Eagle Industrial Dark Theme - SCADA Style */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 48 96% 53%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 48 96% 53%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 25%;
+    --input: 217 33% 20%;
+    --ring: 48 96% 53%;
+    --radius: 0.375rem;
+    
+    /* Industrial Custom Colors */
+    --eagle-yellow: #FACC15;
+    --eagle-gold: #EAB308;
+    --carbon-deep: #020617;
+    --carbon-base: #0f172a;
+    --carbon-light: #1e293b;
+    --carbon-surface: #334155;
+    --industrial-green: #22c55e;
+    --industrial-red: #ef4444;
+    --metallic-border: #475569;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply antialiased;
+    scrollbar-width: thin;
+    scrollbar-color: var(--metallic-border) var(--carbon-deep);
+  }
+  
+  body {
+    @apply bg-carbon text-slate-100;
+    background-image: 
+      radial-gradient(ellipse at top, rgba(30, 41, 59, 0.5) 0%, transparent 50%),
+      linear-gradient(180deg, #0f172a 0%, #020617 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  
+  /* Custom Scrollbar - Industrial Style */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--carbon-deep);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--carbon-surface);
+    border-radius: 4px;
+    border: 1px solid var(--metallic-border);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--metallic-border);
+  }
+}
+
+@layer components {
+  /* Industrial Glassmorphism Card */
+  .industrial-card {
+    @apply relative bg-slate-900/80 border border-slate-700/50 rounded-lg;
+    backdrop-filter: blur(12px);
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .industrial-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  /* Industrial Input - Sensor Style */
+  .industrial-input {
+    @apply bg-slate-900/90 border-2 border-slate-600 rounded px-3 py-2 text-slate-100 font-mono;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+  }
+  
+  .industrial-input:focus {
+    @apply border-eagle-yellow outline-none;
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.4),
+      0 0 0 2px rgba(250, 204, 21, 0.2);
+  }
+  
+  /* Industrial Button - Heavy Machinery Style */
+  .industrial-btn {
+    @apply relative bg-gradient-to-b from-slate-700 to-slate-800 border-2 border-slate-600 rounded px-4 py-2 font-semibold text-slate-100;
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.15s ease;
+  }
+  
+  .industrial-btn:hover {
+    @apply bg-gradient-to-b from-slate-600 to-slate-700;
+    transform: translateY(-1px);
+    box-shadow: 
+      0 6px 12px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  
+  .industrial-btn:active {
+    transform: translateY(1px);
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Primary CTA Button - Eagle Yellow */
+  .industrial-btn-primary {
+    @apply industrial-btn bg-gradient-to-b from-yellow-500 to-yellow-600 border-yellow-400 text-slate-900;
+    box-shadow: 
+      0 4px 12px rgba(250, 204, 21, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .industrial-btn-primary:hover {
+    @apply from-yellow-400 to-yellow-500;
+    box-shadow: 
+      0 6px 20px rgba(250, 204, 21, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Data Display - Sensor Reading Style */
+  .sensor-reading {
+    @apply font-mono text-lg tracking-wider;
+    text-shadow: 0 0 10px currentColor;
+  }
+  
+  .sensor-value {
+    @apply font-mono font-bold tabular-nums;
+  }
+  
+  /* Industrial Slider - Heavy Machinery Style */
+  .industrial-slider {
+    @apply relative h-3 bg-slate-800 rounded-sm border border-slate-600;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .industrial-slider-thumb {
+    @apply w-6 h-6 bg-gradient-to-b from-yellow-400 to-yellow-600 border-2 border-yellow-300 rounded-sm cursor-grab;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .industrial-slider-thumb:active {
+    @apply cursor-grabbing;
+  }
+  
+  /* Industrial Toggle - Mechanical Switch */
+  .industrial-toggle {
+    @apply relative w-16 h-8 bg-slate-800 rounded-sm border-2 border-slate-600 cursor-pointer;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .industrial-toggle-thumb {
+    @apply absolute top-0.5 w-7 h-6 bg-gradient-to-b from-slate-400 to-slate-500 rounded-sm transition-all duration-200;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  .industrial-toggle[data-state="checked"] {
+    @apply bg-green-900/50 border-green-600;
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(34, 197, 94, 0.2);
+  }
+  
+  .industrial-toggle[data-state="checked"] .industrial-toggle-thumb {
+    @apply translate-x-7 from-green-400 to-green-500;
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 0 10px rgba(34, 197, 94, 0.5);
+  }
+  
+  .industrial-toggle[data-state="unchecked"] {
+    @apply bg-red-900/30 border-red-800/50;
+  }
+  
+  .industrial-toggle[data-state="unchecked"] .industrial-toggle-thumb {
+    @apply left-0.5 from-red-400 to-red-500;
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 0 8px rgba(239, 68, 68, 0.3);
+  }
+  
+  /* Bottleneck Alert - Pulsing Border */
+  .bottleneck-alert {
+    @apply border-2 border-red-500;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  /* Flow Indicator - Connection Lines */
+  .flow-line-optimal {
+    @apply bg-green-500;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+    animation: glow-green 2s ease-in-out infinite;
+  }
+  
+  .flow-line-blocked {
+    @apply bg-red-500;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+    animation: blink-alert 0.8s ease-in-out infinite;
+  }
+  
+  /* Status Indicators */
+  .status-led {
+    @apply w-3 h-3 rounded-full;
+    box-shadow: 0 0 8px currentColor;
+  }
+  
+  .status-led-on {
+    @apply bg-green-500;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+  }
+  
+  .status-led-off {
+    @apply bg-red-500;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+  }
+  
+  .status-led-warning {
+    @apply bg-yellow-500;
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
+    animation: blink-alert 1s ease-in-out infinite;
+  }
+  
+  /* Industrial Panel Header */
+  .panel-header {
+    @apply flex items-center gap-2 px-4 py-3 bg-slate-800/80 border-b border-slate-700;
+    background: linear-gradient(180deg, rgba(51, 65, 85, 0.8) 0%, rgba(30, 41, 59, 0.9) 100%);
+  }
+  
+  /* Metric Card - Dashboard Style */
+  .metric-card {
+    @apply relative overflow-hidden rounded-lg border border-slate-700/50;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+    backdrop-filter: blur(8px);
+  }
+  
+  .metric-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--eagle-yellow), transparent);
+    opacity: 0.5;
+  }
+}
+
+@layer utilities {
+  /* Text Glow Effects */
+  .text-glow-yellow {
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.5), 0 0 20px rgba(250, 204, 21, 0.3);
+  }
+  
+  .text-glow-green {
+    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5), 0 0 20px rgba(34, 197, 94, 0.3);
+  }
+  
+  .text-glow-red {
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+  
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3);
+  }
+}
+
+/* Animations */
+.animate-count-up {
+  animation: countUp 0.5s ease-out;
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.8);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.8), 0 0 40px rgba(239, 68, 68, 0.5);
+    border-color: rgba(239, 68, 68, 1);
+  }
+}
+
+@keyframes glow-green {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.4);
+    opacity: 0.7;
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.8);
+    opacity: 1;
+  }
+}
+
+@keyframes blink-alert {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Recharts Global Dark Theme Override */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-wrapper * {
+  background-color: transparent !important;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none !important;
+  z-index: 9999 !important;
+}
+
+/* Force dark background on ALL tooltip containers - extremely aggressive */
+.recharts-tooltip-wrapper > *,
+.recharts-tooltip-wrapper > div,
+.recharts-tooltip-wrapper div,
+.recharts-tooltip-wrapper [style],
+.recharts-tooltip-wrapper [style*="background"],
+.recharts-default-tooltip,
+.recharts-tooltip-wrapper .recharts-default-tooltip,
+div[class*="recharts"] .recharts-default-tooltip,
+.recharts-custom-tooltip {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+}
+
+.recharts-tooltip-label,
+.recharts-default-tooltip .recharts-tooltip-label {
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.recharts-tooltip-item,
+.recharts-default-tooltip .recharts-tooltip-item,
+.recharts-tooltip-item-list li {
+  color: #e2e8f0 !important;
+}
+
+.recharts-tooltip-item-name,
+.recharts-tooltip-item-separator,
+.recharts-tooltip-item-value,
+.recharts-default-tooltip .recharts-tooltip-item-name,
+.recharts-default-tooltip .recharts-tooltip-item-separator,
+.recharts-default-tooltip .recharts-tooltip-item-value {
+  color: #e2e8f0 !important;
+}
+
+/* Override inline styles that might have white backgrounds - exhaustive list */
+.recharts-tooltip-wrapper [style*="background: rgb(255, 255, 255)"],
+.recharts-tooltip-wrapper [style*="background-color: rgb(255, 255, 255)"],
+.recharts-tooltip-wrapper [style*="background:#fff"],
+.recharts-tooltip-wrapper [style*="background: #fff"],
+.recharts-tooltip-wrapper [style*="background-color:#fff"],
+.recharts-tooltip-wrapper [style*="background-color: #fff"],
+.recharts-tooltip-wrapper [style*="background: white"],
+.recharts-tooltip-wrapper [style*="background-color: white"],
+.recharts-tooltip-wrapper [style*="rgb(255,255,255)"],
+.recharts-tooltip-wrapper [style*="rgba(255,255,255"],
+.recharts-tooltip-wrapper [style*="#FFFFFF"],
+.recharts-tooltip-wrapper [style*="#ffffff"] {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+}
+
+/* Override any white text on white bg - force dark text on light or light text on dark */
+.recharts-text,
+.recharts-cartesian-axis-tick-value,
+.recharts-label {
+  fill: #94a3b8 !important;
+}
+
+/* Legend text color */
+.recharts-legend-item-text {
+  color: #64748b !important;
+}
+
+/* Axis labels */
+.recharts-xAxis .recharts-text,
+.recharts-yAxis .recharts-text {
+  fill: #64748b !important;
+}
+
+/* Grid lines */
+.recharts-cartesian-grid line {
+  stroke: #334155 !important;
+}
+
+/* Pie chart labels - ensure dark theme visibility */
+.recharts-pie-label-text,
+.recharts-pie-label-line {
+  fill: #94a3b8 !important;
+  stroke: #64748b !important;
+}
+
+/* All Recharts SVG text elements */
+.recharts-wrapper text,
+.recharts-wrapper tspan,
+.recharts-surface text,
+.recharts-layer text {
+  fill: #94a3b8 !important;
+}
+
+/* Recharts active dot */
+.recharts-active-dot {
+  stroke: #1e293b !important;
+}
+
+/* Ensure any label background is dark */
+.recharts-label-list text,
+.recharts-label {
+  fill: #e2e8f0 !important;
+}
+
+/* Reference line labels */
+.recharts-reference-line text,
+.recharts-reference-line-label {
+  fill: #64748b !important;
+}
+
+/* Force legend wrapper to be transparent */
+.recharts-legend-wrapper {
+  background-color: transparent !important;
+}
+
+/* Any positioned label containers */
+.recharts-label-list,
+.recharts-default-legend {
+  background-color: transparent !important;
+}
+
+/* CRITICAL: Force all white backgrounds within recharts to dark */
+[class*="recharts"] [style*="background"] {
+  background: #1e293b !important;
+  background-color: #1e293b !important;
+}
+
+/* Force ALL text within Recharts to have proper contrast */
+[class*="recharts"] * {
+  color: #e2e8f0 !important;
+}
+
+/* SVG text overrides */
+svg[class*="recharts"] text,
+[class*="recharts"] svg text {
+  fill: #94a3b8 !important;
+}
+
+/* Ensure tooltip content always has dark background */
+[class*="recharts-tooltip"] {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Override any element with white/light inline background */
+[style*="background: rgb(255"],
+[style*="background-color: rgb(255"],
+[style*="background:#fff"],
+[style*="background: #fff"],
+[style*="background-color:#fff"],
+[style*="background-color: #fff"],
+[style*="background:white"],
+[style*="background: white"],
+[style*="background-color:white"],
+[style*="background-color: white"] {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+}

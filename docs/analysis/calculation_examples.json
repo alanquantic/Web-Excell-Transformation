@@ -1,0 +1,67 @@
+{
+  "example_1_basic_calculation": {
+    "scenario_name": "Standard Maintenance Order",
+    "user": "john.doe@eagle.com",
+    "items": [
+      {
+        "part_id": 1,
+        "part_name": "Hydraulic Filter (OTR Debeader)",
+        "qty": 2,
+        "price": 181.4,
+        "total": 362.8
+      },
+      {
+        "part_id": 3,
+        "part_name": "Cutter Blade (OTR Debeader)",
+        "qty": 2,
+        "price": 607.23,
+        "total": 1214.46
+      }
+    ],
+    "subtotals": {
+      "OTR Debeader": 1577.26
+    },
+    "grand_total": 1577.26
+  },
+  "example_2_full_order": {
+    "scenario_name": "Complete Spare Parts Kit - All Equipment",
+    "user": "jane.smith@eagle.com",
+    "sections": [
+      {
+        "category": "OTR Debeader",
+        "subtotal": 2841.79
+      },
+      {
+        "category": "Punch Cutter II",
+        "subtotal": 3301.97
+      },
+      {
+        "category": "Titan II",
+        "subtotal": 6296.56
+      },
+      {
+        "category": "Interchangeable Parts",
+        "subtotal": 655.9
+      }
+    ],
+    "grand_total": 13096.22,
+    "cost_distribution": [
+      {
+        "category": "OTR Debeader",
+        "percentage": 21.7
+      },
+      {
+        "category": "Punch Cutter II",
+        "percentage": 25.21
+      },
+      {
+        "category": "Titan II",
+        "percentage": 48.07
+      },
+      {
+        "category": "Interchangeable Parts",
+        "percentage": 5.01
+      }
+    ]
+  }
+}

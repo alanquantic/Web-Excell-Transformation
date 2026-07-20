@@ -1,0 +1,44 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+
+# next.js
+/.next/
+/out/
+/build
+
+# testing
+/coverage
+
+# production / prisma generated client
+/prisma/generated
+
+# misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files (keep .env.example tracked)
+.env
+.env*.local
+.env.production
+!.env.example
+
+# vercel
+.vercel
+
+# typescript build artifacts
+*.tsbuildinfo
+next-env.d.ts
+
+# editors
+.idea/
+.vscode/

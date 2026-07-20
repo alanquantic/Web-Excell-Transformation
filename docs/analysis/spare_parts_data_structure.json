@@ -1,0 +1,154 @@
+{
+  "equipment_categories": [
+    {
+      "id": 1,
+      "name": "OTR Debeader",
+      "display_order": 1,
+      "parts": [
+        {
+          "id": 1,
+          "name": "Hydraulic Filter",
+          "default_qty": 2,
+          "default_price": 181.4,
+          "type": "hydraulic"
+        },
+        {
+          "id": 2,
+          "name": "Limit Switch",
+          "default_qty": 2,
+          "default_price": 505.23,
+          "type": "electronic"
+        },
+        {
+          "id": 3,
+          "name": "Cutter Blade",
+          "default_qty": 2,
+          "default_price": 607.23,
+          "type": "blade"
+        },
+        {
+          "id": 4,
+          "name": "Guide Roller & Bushing",
+          "default_qty": 1,
+          "default_price": 165.49,
+          "type": "mechanical"
+        },
+        {
+          "id": 5,
+          "name": "Guide Roller Pin",
+          "default_qty": 1,
+          "default_price": 88.58,
+          "type": "mechanical"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Punch Cutter II",
+      "display_order": 2,
+      "parts": [
+        {
+          "id": 6,
+          "name": "Hydraulic Filter",
+          "default_qty": 2,
+          "default_price": 181.4,
+          "type": "hydraulic"
+        },
+        {
+          "id": 7,
+          "name": "Sensory Rotary Encoder",
+          "default_qty": 1,
+          "default_price": 735.65,
+          "type": "electronic"
+        },
+        {
+          "id": 8,
+          "name": "Limit Switch",
+          "default_qty": 2,
+          "default_price": 505.23,
+          "type": "electronic"
+        },
+        {
+          "id": 9,
+          "name": "Punch Blade",
+          "default_qty": 2,
+          "default_price": 596.53,
+          "type": "blade"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Titan II",
+      "display_order": 3,
+      "parts": [
+        {
+          "id": 10,
+          "name": "Hydraulic Filter",
+          "default_qty": 2,
+          "default_price": 181.4,
+          "type": "hydraulic"
+        },
+        {
+          "id": 11,
+          "name": "Cutter Blade",
+          "default_qty": 2,
+          "default_price": 2653.0,
+          "type": "blade"
+        },
+        {
+          "id": 12,
+          "name": "Guide Roller & Bushing",
+          "default_qty": 1,
+          "default_price": 831.4,
+          "type": "mechanical"
+        },
+        {
+          "id": 13,
+          "name": "Guide Roller Pin",
+          "default_qty": 1,
+          "default_price": 588.4,
+          "type": "mechanical"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Interchangeable Parts",
+      "display_order": 4,
+      "parts": [
+        {
+          "id": 14,
+          "name": "PQ Control",
+          "default_qty": 1,
+          "default_price": 655.9,
+          "type": "electronic"
+        }
+      ]
+    }
+  ],
+  "calculation_formulas": {
+    "line_item_total": "quantity \u00d7 unit_price",
+    "section_subtotal": "SUM(all line items in section)",
+    "grand_total": "SUM(all section subtotals)",
+    "section_percentage": "(section_subtotal / grand_total) \u00d7 100"
+  },
+  "validation_rules": {
+    "quantity": {
+      "type": "integer",
+      "min": 0,
+      "max": 9999
+    },
+    "unit_price": {
+      "type": "decimal",
+      "min": 0,
+      "max": 999999.99,
+      "decimals": 2
+    },
+    "scenario_name": {
+      "type": "string",
+      "min_length": 3,
+      "max_length": 100
+    }
+  }
+}
